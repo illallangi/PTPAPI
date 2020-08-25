@@ -1,10 +1,6 @@
-from sys import exit
-
 from click import get_app_dir
 
 from diskcache import Cache
-
-from json import dumps
 
 from loguru import logger
 
@@ -45,14 +41,16 @@ class API(object):
                 if 'Torrents' not in r.json() or len([x for x in r.json()['Torrents'] if x['InfoHash'] == hash]) != 1:
                     logger.error('No response received for hash {hash}')
                     return None
-                cache.set(hash, {
-                    **{
-                        key: r.json()[key]
-                        for key in r.json()
-                        if key not in ['Torrents']
+                cache.set(
+                    hash,
+                    {
+                        **{
+                            key: r.json()[key]
+                            for key in r.json()
+                            if key not in ['Torrents']
+                        },
+                        **[x for x in r.json()['Torrents'] if x['InfoHash'] == hash][0]
                     },
-                    **[x for x in r.json()['Torrents'] if x['InfoHash'] == hash][0]
-                }, 
-                expire=EXPIRE)
+                    expire=EXPIRE)
 
             return Torrent(cache[hash])
