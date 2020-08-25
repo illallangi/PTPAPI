@@ -50,12 +50,13 @@ def cli(log_level, slack_webhook, slack_username, slack_format):
         type=STRING,
         required=False,
         default=PTP_ENDPOINTDEF)
+@option('--cache/--no-cache', default=True)
 @argument('hash',
           type=STRING,
           required=True)
-def get_torrent(api_user, api_key, endpoint, hash):
+def get_torrent(api_user, api_key, endpoint, hash, cache):
     hash = hash.upper()
-    logger.info(PTP_API(api_user, api_key, endpoint).get_torrent(hash))
+    logger.info(PTP_API(api_user, api_key, endpoint, cache).get_torrent(hash))
 
 
 if __name__ == "__main__":
