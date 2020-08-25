@@ -8,6 +8,7 @@ from requests import get as http_get
 
 from yarl import URL
 
+from .tokenbucket import TokenBucket
 from .torrent import Torrent
 
 ENDPOINTDEF = 'https://passthepopcorn.me/'
@@ -22,6 +23,7 @@ class API(object):
         self.endpoint = URL(endpoint) if not isinstance(endpoint, URL) else endpoint
         self.cache = cache
         self.config_path = get_app_dir(__package__) if not config_path else config_path
+        self.bucket = TokenBucket(1, 1 / 5)
 
     def get_torrent(self, hash):
         hash = hash.upper()
@@ -29,6 +31,7 @@ class API(object):
             if not self.cache or hash not in cache:
                 sleep_time = 5
                 while True:
+                    self.bucket.consume()
                     r = http_get(self.endpoint / 'torrents.php',
                                  params={
                                      'json': 'noredirect',
