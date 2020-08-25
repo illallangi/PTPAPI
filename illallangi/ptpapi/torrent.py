@@ -39,6 +39,7 @@ class Torrent(object):
             'Quality',
             'ReleaseGroup',
             'ReleaseName',
+            'RemasterTitle',
             'Resolution',
             'Result',
             'Scene',
