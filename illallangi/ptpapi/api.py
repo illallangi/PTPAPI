@@ -29,7 +29,6 @@ class API(object):
         hash = hash.upper()
         with Cache(self.config_path) as cache:
             if not self.cache or hash not in cache:
-                sleep_time = 5
                 while True:
                     self.bucket.consume()
                     r = http_get(self.endpoint / 'torrents.php',
