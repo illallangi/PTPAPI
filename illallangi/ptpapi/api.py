@@ -53,7 +53,6 @@ class API(object):
     def get_torrent(self, hash):
         hash = hash.upper()
         with Cache(self.config_path) as cache:
-            logger.trace(list(cache.iterkeys()))
             if not self.cache or hash not in cache:
                 while True:
                     self.bucket.consume()
