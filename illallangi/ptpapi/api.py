@@ -1,3 +1,5 @@
+from re import sub
+
 from click import get_app_dir
 
 from diskcache import Cache
@@ -24,7 +26,7 @@ class API(object):
         cache=True,
         config_path=None,
         *args,
-        **kwargs
+        **kwargs,
     ):
         super().__init__(*args, **kwargs)
         self.api_user = api_user
@@ -34,9 +36,24 @@ class API(object):
         self.config_path = get_app_dir(__package__) if not config_path else config_path
         self.bucket = TokenBucket(1, 1 / 5)
 
+    def rename_torrent_file(self, hash, path):
+        result = self.get_directory(hash)
+        if result is None:
+            return
+        path = sub(" ", ".", path.lower())
+        path = f"/{path}"
+        return sub("^.*?/+", result, path)
+
+    def get_directory(self, hash):
+        torrent = self.get_torrent(hash)
+        if torrent is None:
+            return
+        return f"{torrent.name} ({torrent.year})/"
+
     def get_torrent(self, hash):
         hash = hash.upper()
         with Cache(self.config_path) as cache:
+            logger.trace(list(cache.iterkeys()))
             if not self.cache or hash not in cache:
                 while True:
                     self.bucket.consume()
@@ -80,3 +97,7 @@ class API(object):
                     break
 
             return Torrent(cache[hash])
+
+    @property
+    def supported_trackers(self):
+        return ["passthepopcorn.me"]

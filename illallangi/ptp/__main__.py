@@ -50,7 +50,7 @@ def cli(log_level, slack_webhook, slack_username, slack_format):
 @option("--endpoint", type=STRING, required=False, default=PTP_ENDPOINTDEF)
 @option("--cache/--no-cache", default=True)
 def get_index(api_user, api_key, endpoint, cache):
-    obj = PTP_API(api_key, endpoint, cache).get_index()
+    obj = PTP_API(api_user, api_key, endpoint, cache).get_index()
     logger.info(obj)
     logger.trace(dumps(obj, default=lambda x: x.__dict__))
 
@@ -76,6 +76,55 @@ def get_index(api_user, api_key, endpoint, cache):
 def get_torrent(api_user, api_key, endpoint, hash, cache):
     hash = hash.upper()
     logger.info(PTP_API(api_user, api_key, endpoint, cache).get_torrent(hash))
+
+
+@cli.command(name="get-directory")
+@option(
+    "--api-user",
+    "--ptp-api-user",
+    envvar="PTP_API_USER",
+    type=STRING,
+    required=True,
+)
+@option(
+    "--api-key",
+    "--ptp-api-key",
+    envvar="PTP_API_KEY",
+    type=STRING,
+    required=True,
+)
+@option("--endpoint", type=STRING, required=False, default=PTP_ENDPOINTDEF)
+@option("--cache/--no-cache", default=True)
+@argument("hash", type=STRING, required=True)
+def get_directory(api_user, api_key, endpoint, cache, hash):
+    obj = PTP_API(api_user, api_key, endpoint, cache).get_directory(hash)
+    logger.info(obj)
+    logger.trace(dumps(obj, default=lambda x: x.__dict__))
+
+
+@cli.command(name="rename-torrent-file")
+@option(
+    "--api-user",
+    "--ptp-api-user",
+    envvar="PTP_API_USER",
+    type=STRING,
+    required=True,
+)
+@option(
+    "--api-key",
+    "--ptp-api-key",
+    envvar="PTP_API_KEY",
+    type=STRING,
+    required=True,
+)
+@option("--endpoint", type=STRING, required=False, default=PTP_ENDPOINTDEF)
+@option("--cache/--no-cache", default=True)
+@argument("hash", type=STRING, required=True)
+@argument("path", type=STRING, required=True)
+def rename_torrent_file(api_user, api_key, endpoint, cache, hash, path):
+    obj = PTP_API(api_user, api_key, endpoint, cache).rename_torrent_file(hash, path)
+    logger.info(obj)
+    logger.trace(dumps(obj, default=lambda x: x.__dict__))
 
 
 if __name__ == "__main__":

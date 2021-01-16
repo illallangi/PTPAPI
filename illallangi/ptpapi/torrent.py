@@ -69,6 +69,14 @@ class Torrent(object):
         return self._dictionary["ReleaseName"]
 
     @cached_property
+    def name(self):
+        return self._dictionary["Name"]
+
+    @cached_property
+    def year(self):
+        return self._dictionary["Year"]
+
+    @cached_property
     def coverimage(self):
         return URL(self._dictionary["CoverImage"]).with_scheme("https")
 
