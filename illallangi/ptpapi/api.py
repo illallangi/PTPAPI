@@ -56,20 +56,27 @@ class API(object):
             if not self.cache or hash not in cache:
                 while True:
                     self.bucket.consume()
+                    params = {
+                        "json": "noredirect",
+                        "infohash": hash,
+                    }
+                    headers = {
+                        "ApiUser": self.api_user,
+                        "ApiKey": self.api_key,
+                        "user-agent": "illallangi-ptpapi/0.0.1",
+                    }
+
+                    logger.trace(params)
+                    logger.trace(headers)
+
                     r = http_get(
                         self.endpoint / "torrents.php",
-                        params={
-                            "json": "noredirect",
-                            "infohash": hash,
-                        },
-                        headers={
-                            "ApiUser": self.api_user,
-                            "ApiKey": self.api_key,
-                            "user-agent": "illallangi-btnapi/0.0.1",
-                        },
+                        params=params,
+                        headers=headers,
                     )
                     logger.debug("Received {0} bytes from API".format(len(r.content)))
-                    logger.trace(r.json())
+                    logger.trace(r.headers)
+                    logger.trace(r.content)
                     if (
                         "Torrents" not in r.json()
                         or len(
