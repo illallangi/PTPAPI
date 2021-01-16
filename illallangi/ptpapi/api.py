@@ -42,7 +42,7 @@ class API(object):
             return
         path = sub(" ", ".", path.lower())
         path = f"/{path}"
-        return sub("^.*?/+", result, path)
+        return sub("^.*/", result, path)
 
     def get_directory(self, hash):
         torrent = self.get_torrent(hash)
