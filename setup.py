@@ -18,16 +18,16 @@ setuptools.setup(
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
     ],
-    python_requires='>=3.6',
+    python_requires=">=3.6",
     entry_points={
-        'console_scripts': ['ptpapi=illallangi.ptpapi:__main__.cli'],
+        "console_scripts": ["ptp-tool=illallangi.ptp:__main__.cli"],
     },
     install_requires=[
-        'bytesize',
-        'Click',
-        'diskcache',
-        'loguru',
-        'notifiers',
-        'yarl',
-    ]
+        "bytesize",
+        "Click",
+        "diskcache",
+        "loguru",
+        "notifiers",
+        "yarl",
+    ],
 )

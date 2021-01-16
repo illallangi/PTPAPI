@@ -11,7 +11,7 @@ ADD . /usr/src/app
 
 RUN pip3 install .
 
-ENTRYPOINT ["/usr/local/bin/ptpapi"]
+ENTRYPOINT ["/usr/local/bin/ptp-tool"]
 
 ARG VCS_REF
 ARG VERSION

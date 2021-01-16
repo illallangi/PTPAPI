@@ -14,62 +14,64 @@ class Torrent(object):
 
         for key in self._dictionary.keys():
             if key not in self._keys:
-                raise Exception(f'Unhandled key in {self.__class__}: {key}')
-            logger.trace('{}: {}"{}"', key, type(self._dictionary[key]), self._dictionary[key])
+                raise Exception(f"Unhandled key in {self.__class__}: {key}")
+            logger.trace(
+                '{}: {}"{}"', key, type(self._dictionary[key]), self._dictionary[key]
+            )
 
     @property
     def _keys(self):
         return [
-            'AuthKey',
-            'Checked',
-            'Codec',
-            'Container',
-            'CoverImage',
-            'GoldenPopcorn',
-            'GroupId',
-            'Id',
-            'ImdbId',
-            'ImdbRating',
-            'ImdbVoteCount',
-            'InfoHash',
-            'Leechers',
-            'Name',
-            'Page',
-            'PassKey',
-            'Quality',
-            'ReleaseGroup',
-            'ReleaseName',
-            'RemasterTitle',
-            'Resolution',
-            'Result',
-            'Scene',
-            'Seeders',
-            'Size',
-            'Snatched',
-            'Source',
-            'TorrentId',
-            'UploadTime',
-            'Year',
+            "AuthKey",
+            "Checked",
+            "Codec",
+            "Container",
+            "CoverImage",
+            "GoldenPopcorn",
+            "GroupId",
+            "Id",
+            "ImdbId",
+            "ImdbRating",
+            "ImdbVoteCount",
+            "InfoHash",
+            "Leechers",
+            "Name",
+            "Page",
+            "PassKey",
+            "Quality",
+            "ReleaseGroup",
+            "ReleaseName",
+            "RemasterTitle",
+            "Resolution",
+            "Result",
+            "Scene",
+            "Seeders",
+            "Size",
+            "Snatched",
+            "Source",
+            "TorrentId",
+            "UploadTime",
+            "Year",
         ]
 
     def __repr__(self):
-        return f'{self.__class__}{self.infohash} - {self.releasename})'
+        return f"{self.__class__}{self.infohash} - {self.releasename})"
 
     def __str__(self):
         return f'{self.infohash} - {self.releasename} ({str(self.size).strip("@")} {self.coverimage})'
 
     @cached_property
     def infohash(self):
-        return self._dictionary['InfoHash']
+        return self._dictionary["InfoHash"]
 
     @cached_property
     def releasename(self):
-        return self._dictionary['ReleaseName']
+        return self._dictionary["ReleaseName"]
 
     @cached_property
     def coverimage(self):
-        return URL(self._dictionary['CoverImage']).with_scheme('https')
+        return URL(self._dictionary["CoverImage"]).with_scheme("https")
 
     @cached_property
     def size(self):
-        return Size(int(self._dictionary['Size']))
+        return Size(int(self._dictionary["Size"]))

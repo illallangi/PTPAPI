@@ -11,12 +11,21 @@ from yarl import URL
 from .tokenbucket import TokenBucket
 from .torrent import Torrent
 
-ENDPOINTDEF = 'https://passthepopcorn.me/'
+ENDPOINTDEF = "https://passthepopcorn.me/"
 EXPIRE = 7 * 24 * 60 * 60
 
 
 class API(object):
-    def __init__(self, api_user, api_key, endpoint=ENDPOINTDEF, cache=True, config_path=None, *args, **kwargs):
+    def __init__(
+        self,
+        api_user,
+        api_key,
+        endpoint=ENDPOINTDEF,
+        cache=True,
+        config_path=None,
+        *args,
+        **kwargs
+    ):
         super().__init__(*args, **kwargs)
         self.api_user = api_user
         self.api_key = api_key
@@ -31,20 +40,28 @@ class API(object):
             if not self.cache or hash not in cache:
                 while True:
                     self.bucket.consume()
-                    r = http_get(self.endpoint / 'torrents.php',
-                                 params={
-                                     'json': 'noredirect',
-                                     'infohash': hash,
-                                 },
-                                 headers={
-                                     'ApiUser': self.api_user,
-                                     'ApiKey': self.api_key,
-                                     'user-agent': 'illallangi-btnapi/0.0.1',
-                                 })
-                    logger.debug('Received {0} bytes from API'.format(len(r.content)))
+                    r = http_get(
+                        self.endpoint / "torrents.php",
+                        params={
+                            "json": "noredirect",
+                            "infohash": hash,
+                        },
+                        headers={
+                            "ApiUser": self.api_user,
+                            "ApiKey": self.api_key,
+                            "user-agent": "illallangi-btnapi/0.0.1",
+                        },
+                    )
+                    logger.debug("Received {0} bytes from API".format(len(r.content)))
                     logger.trace(r.json())
-                    if 'Torrents' not in r.json() or len([x for x in r.json()['Torrents'] if x['InfoHash'] == hash]) != 1:
-                        logger.error('No response received for hash {hash}')
+                    if (
+                        "Torrents" not in r.json()
+                        or len(
+                            [x for x in r.json()["Torrents"] if x["InfoHash"] == hash]
+                        )
+                        != 1
+                    ):
+                        logger.error("No response received for hash {hash}")
                         return None
                     cache.set(
                         hash,
@@ -52,11 +69,14 @@ class API(object):
                             **{
                                 key: r.json()[key]
                                 for key in r.json()
-                                if key not in ['Torrents']
+                                if key not in ["Torrents"]
                             },
-                            **[x for x in r.json()['Torrents'] if x['InfoHash'] == hash][0]
+                            **[
+                                x for x in r.json()["Torrents"] if x["InfoHash"] == hash
+                            ][0],
                         },
-                        expire=EXPIRE)
+                        expire=EXPIRE,
+                    )
                     break
 
             return Torrent(cache[hash])

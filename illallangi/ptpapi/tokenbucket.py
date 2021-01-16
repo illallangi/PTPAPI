@@ -24,10 +24,10 @@ class TokenBucket(object):
             deficit = 1 - self._tokens
             delay = ceil(deficit / self.fill_rate)
 
-            logger.info('Sleeping {} seconds', delay)
+            logger.info("Sleeping {} seconds", delay)
             sleep(delay)
 
-        logger.trace('Have {} tokens', floor(self._tokens))
+        logger.trace("Have {} tokens", floor(self._tokens))
         self._tokens -= 1
 
     @property
